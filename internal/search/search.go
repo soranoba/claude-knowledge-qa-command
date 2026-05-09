@@ -59,29 +59,27 @@ func score(text string, queryBigrams map[string]int, queryTerms []string) float6
 	}
 
 	textBigrams := charBigrams(text)
-	s := 0.0
+
+	// Bigram recall: fraction of query bigrams found in the chunk (0..1)
+	matched, total := 0.0, 0.0
 	for bg, qc := range queryBigrams {
+		total += float64(qc)
 		if tc, ok := textBigrams[bg]; ok {
-			match := qc
-			if tc < match {
-				match = tc
+			if tc < qc {
+				matched += float64(tc)
+			} else {
+				matched += float64(qc)
 			}
-			s += float64(match)
 		}
 	}
+	s := matched / total
 
-	// Bonus for longer exact substring matches
+	// Bonus for exact term presence
 	lowerText := strings.ToLower(text)
 	for _, term := range queryTerms {
 		if len([]rune(term)) >= 2 && strings.Contains(lowerText, strings.ToLower(term)) {
-			s += float64(len([]rune(term))) * 2
+			s += 0.5
 		}
-	}
-
-	// Normalize to avoid favoring very long chunks
-	textLen := float64(len([]rune(text)))
-	if textLen > 0 {
-		s = s / textLen * 1000
 	}
 
 	return s
