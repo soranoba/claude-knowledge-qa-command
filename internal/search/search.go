@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/soranoba/knowledge-qa/internal/indexer"
+	"github.com/soranoba/claude-knowledge-qa-command/internal/indexer"
 )
 
 type Result struct {

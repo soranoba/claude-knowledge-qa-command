@@ -1,6 +1,6 @@
-# knowledge-qa
+# claude-knowledge-qa-command
 
-A Claude Code custom skill that indexes PDF, Excel, and CSV files in a directory and answers questions based on their content.
+A Claude Code custom command that indexes PDF, Excel, and CSV files in a directory and answers questions based on their content.
 
 ## Overview
 
@@ -8,24 +8,24 @@ Type `/knowledge-qa <directory-or-file> "<question>"` to search across your loca
 
 - **Supported formats**: PDF / Excel (.xlsx, .xls) / CSV
 - **Fully local**: No external API required. Files are indexed locally and relevant chunks are retrieved via bigram search.
-- **Bilingual**: The skill expands queries into both Japanese and English internally, so questions in either language work.
+- **Bilingual**: The command expands queries into both Japanese and English internally, so questions in either language work.
 
 ## Installation
 
 ```bash
-git clone https://github.com/soranoba/knowledge-qa.git
-cd knowledge-qa
+git clone https://github.com/soranoba/claude-knowledge-qa-command.git
+cd claude-knowledge-qa-command
 make install
 ```
 
 `make install` does the following:
 
 - Builds the binary and places it at `~/.claude/commands/bin/knowledge-qa`
-- Installs the skill definition at `~/.claude/commands/knowledge-qa.md`
+- Installs the command definition at `~/.claude/commands/knowledge-qa.md`
 
 ## allowList Configuration (Recommended)
 
-Without an allowList entry, Claude Code will prompt for permission every time the skill runs the binary. Add the following to `~/.claude/settings.json` to allow it to run without prompts:
+Without an allowList entry, Claude Code will prompt for permission every time the command runs the binary. Add the following to `~/.claude/settings.json` to allow it to run without prompts:
 
 ```json
 {

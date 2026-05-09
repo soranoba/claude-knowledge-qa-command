@@ -1,4 +1,4 @@
-module github.com/soranoba/knowledge-qa
+module github.com/soranoba/claude-knowledge-qa-command
 
 go 1.24.1
 

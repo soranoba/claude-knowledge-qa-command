@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/soranoba/knowledge-qa/internal/indexer"
-	"github.com/soranoba/knowledge-qa/internal/search"
+	"github.com/soranoba/claude-knowledge-qa-command/internal/indexer"
+	"github.com/soranoba/claude-knowledge-qa-command/internal/search"
 )
 
 func main() {
