@@ -6,7 +6,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 func extractCSV(path string) ([]Chunk, error) {
@@ -19,11 +18,24 @@ func extractCSV(path string) ([]Chunk, error) {
 	r := csv.NewReader(f)
 	r.LazyQuotes = true
 	r.TrimLeadingSpace = true
+	r.FieldsPerRecord = -1
+	r.Comment = '#'
 
-	source := filepath.Base(path)
-	var lines []string
-	rowNum := 0
+	// Read header row
+	var header []string
+	for {
+		record, err := r.Read()
+		if err == io.EOF {
+			return nil, nil
+		}
+		if err != nil {
+			continue
+		}
+		header = record
+		break
+	}
 
+	var rows [][]string
 	for {
 		record, err := r.Read()
 		if err == io.EOF {
@@ -32,37 +44,8 @@ func extractCSV(path string) ([]Chunk, error) {
 		if err != nil {
 			continue
 		}
-		rowNum++
-
-		var cells []string
-		for _, cell := range record {
-			cell = strings.TrimSpace(cell)
-			if cell != "" {
-				cells = append(cells, cell)
-			}
-		}
-		if len(cells) > 0 {
-			lines = append(lines, strings.Join(cells, " | "))
-		}
+		rows = append(rows, record)
 	}
 
-	if len(lines) == 0 {
-		return nil, nil
-	}
-
-	var chunks []Chunk
-	const rowsPerChunk = 20
-	for start := 0; start < len(lines); start += rowsPerChunk {
-		end := start + rowsPerChunk
-		if end > len(lines) {
-			end = len(lines)
-		}
-		chunks = append(chunks, Chunk{
-			Source:   source,
-			Location: fmt.Sprintf("行 %d–%d", start+1, end),
-			Text:     strings.Join(lines[start:end], "\n"),
-		})
-	}
-
-	return chunks, nil
+	return chunksFromTable(filepath.Base(path), "row", header, rows), nil
 }
